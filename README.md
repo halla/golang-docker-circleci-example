@@ -7,7 +7,7 @@ This is built on Ubuntu Xenial (16.04). On Windows/Mac some tweaks probably need
 * ~~Docker hello world~~
 * ~~Hello http server~~
 * ~~Unit test case~~
-* Development workflow with code reload/compile
+* ~~Development workflow with code reload/compile~~
 * Use a goroutine
 * Use a channel
 * Make a HTTP-request
@@ -25,14 +25,12 @@ Assuming you have docker installed, get golang docker image, build and run:
 
 You should see "Starting server..." in the console, and "Hello world" in your browser if you navigate to localhost:8080
 
+> build -t tags the container with the given name
+> --volume mounts the current directory to the docker container for code reloading
+> -p binds your host port to docker port
+> --rm removes the container after exit
+> --name assigns a name
 
-'''
-build -t tags the container with the given name
---volume mounts the current directory to the docker container for code reloading
--p binds your host port to docker port
---rm removes the container after exit
---name assigns a name
-'''
 
 
  See also
