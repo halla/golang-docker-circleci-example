@@ -35,6 +35,6 @@ You should see "Starting server..." in the console, and "Hello world" in your br
 
  See also
  * The Go Programming Language https://golang.org/
- * Docker https://duckduckgo.com/?q=docker&t=canonical&ia=web
+ * Docker https://www.docker.com/
  * CircleCI https://circleci.com/
  * golang docker image https://hub.docker.com/_/golang/
