@@ -12,7 +12,9 @@ Build status: [![CircleCI](https://circleci.com/gh/halla/golang-docker-circleci-
 * ~~Development workflow with code reload/compile~~
 * Use a goroutine
 * Use a channel
-* Make a HTTP-request
+* ~~Make a HTTP-request~~
+* ~~Parse JSON~~
+* Serve static files
 * ~~CircleCI integration~~
 * Production deployment
 
@@ -35,8 +37,15 @@ You should see "Starting server..." in the console, and "Hello world" in your br
 
 
 
- See also
+## Technology links
+
  * The Go Programming Language https://golang.org/
  * Docker https://www.docker.com/
  * CircleCI https://circleci.com/
  * golang docker image https://hub.docker.com/_/golang/
+ * gin for code reloading https://github.com/codegangsta/gin
+
+## Tutorials
+
+* Install Docker on Ubuntu 16.04 https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
+* Development with Go and Docker https://medium.com/developers-writing/docker-powered-development-environment-for-your-go-app-6185d043ea35
