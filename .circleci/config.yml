@@ -30,5 +30,6 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u ${DOCKER_USER} -p ${DOCKER_PASS} https://registry-1.docker.io/v2/
+              docker tag ${CIRCLE_SHA1} ${DOCKER_REPO}
               docker push ${DOCKER_REPO}:${CIRCLE_SHA1}
             fi
