@@ -14,6 +14,7 @@ Build status: [![CircleCI](https://circleci.com/gh/halla/golang-docker-circleci-
 * Use a channel
 * ~~Make a HTTP-request~~
 * ~~Parse JSON~~
+* Use an HTML template
 * Serve static files
 * ~~CircleCI integration~~
 * Production deployment
@@ -21,9 +22,8 @@ Build status: [![CircleCI](https://circleci.com/gh/halla/golang-docker-circleci-
 
 ## Usage
 
-Assuming you have docker installed, get golang docker image, build and run:
+Assuming you have docker installed, clone this repo, cd to the project directory, build and run:
 
-* $ docker pull golang
 * $ docker build -t hello-golang .
 * $ docker run --volume=$PWD:/go/src/app -p 8080:3000 --rm --name my-running-app hello-golang
 

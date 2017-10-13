@@ -37,7 +37,7 @@ type Project struct {
 
 // Uppercased functions are exported
 func Message(project *Project) string {
-	return "Hello world! Latest commit at: " + project.PushedAt
+	return "Hello world! Latest commit: " + project.PushedAt
 }
 
 func getJSON(url string, target interface{}) error {
