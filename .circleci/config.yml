@@ -25,10 +25,9 @@ jobs:
       - run: go get -v -t -d ./...
       - run: go test -v ./...
       - deploy:
-          latest:
-            branch: master
-            commands:
-              - docker login -u $DOCKER_USER -p $DOCKER_PASS
-              - docker push $DOCKER_REPO:$CIRCLE_SHA1
-              - docker push $DOCKER_REPO:latest
-              
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push $DOCKER_REPO:$CIRCLE_SHA1
+              docker push $DOCKER_REPO:latest                        
+            fi
