@@ -26,6 +26,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	project := new(Project)
 	getJSON(projectURL, project)
 	fmt.Println(project)
+	io.WriteString(w, "<h1>golang-docker-circleci-example</h1>")
 	io.WriteString(w, Message(project))
 }
 
