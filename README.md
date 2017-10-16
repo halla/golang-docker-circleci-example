@@ -47,7 +47,7 @@ If you modify the source code, you should see the changes when refreshing your b
 To deploy the project using the image in Docker Hub registry
 
 * install Docker on your server
-* docker pull
+* docker pull ahalla/golang-docker-circleci-example
 * docker run -d -p 8080:3000 --rm --name golang-docker-circleci-example ahalla/golang-docker-circleci-example
 
 This will run the container as a background job, listening to the OS port 8080. The container will be removed automatically when killed.
