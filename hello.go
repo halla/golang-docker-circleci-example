@@ -9,7 +9,15 @@ import (
 	"time"
 )
 
-const projectURL = "https://api.github.com/repos/halla/golang-docker-circleci-example"
+const githubProjectBaseURL = "https://api.github.com/repos/"
+
+const projectName = "halla/golang-docker-circleci-example"
+
+// slices are popular data structures in go
+var projectNames = []string{
+	"golang/go",
+	"docker/docker-ce",
+}
 
 // there is no timeout by default!
 var httpClient = &http.Client{Timeout: 10 * time.Second}
@@ -23,22 +31,40 @@ func main() {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	project := new(Project)
-	getJSON(projectURL, project)
-	fmt.Println(project)
+
 	io.WriteString(w, "<h1>golang-docker-circleci-example</h1>")
+
+	// synchronous http request
+	project := new(Project)
+	projectURL := githubProjectBaseURL + projectName
+	fmt.Println("Requesting info for " + projectURL)
+	getJSON(projectURL, project)
 	io.WriteString(w, Message(project))
+
+	// async http requests, response through channel
+	ch := make(chan *Project)
+
+	for _, projectName := range projectNames {
+		go getProjectAsync(githubProjectBaseURL+projectName, ch) // start an async go routine
+	}
+	for range projectNames {
+		project = <-ch
+		io.WriteString(w, Message(project))
+		fmt.Println("Received project info for " + project.Name)
+	}
+	fmt.Println(project)
 }
 
 // Project type is used to extract fields from Github project json object.
 // Field names have to be uppercase (exported) for json decoder to work.
 type Project struct {
+	Name     string `json:"name"`
 	PushedAt string `json:"pushed_at"`
 }
 
 // Uppercased functions are exported
 func Message(project *Project) string {
-	return "Hello world! Latest commit: " + project.PushedAt
+	return "<p>" + project.Name + ": Latest commit: " + project.PushedAt + "</p>"
 }
 
 func getJSON(url string, target interface{}) error {
@@ -49,4 +75,20 @@ func getJSON(url string, target interface{}) error {
 
 	defer resp.Body.Close()
 	return json.NewDecoder(resp.Body).Decode(target)
+}
+
+func getProjectAsync(url string, ch chan<- *Project) {
+	fmt.Println("Requesting info for " + url)
+	resp, err := httpClient.Get(url)
+	target := new(Project)
+	if err != nil {
+		target.Name = "Unknown"
+		target.PushedAt = "Unknown"
+		ch <- target
+		return
+	}
+	json.NewDecoder(resp.Body).Decode(target)
+	ch <- target
+	defer resp.Body.Close()
+	return
 }

@@ -6,8 +6,9 @@ import "testing"
 func TestMessage(t *testing.T) {
 	project := new(Project)
 	project.PushedAt = "now"
+	project.Name = "TestProject"
 	msg := Message(project)
-	if msg != "Hello world! Latest commit: now" {
+	if msg != "<p>TestProject: Latest commit: now</p>" {
 		t.Errorf("Incorrect message: %s", msg)
 	}
 }
