@@ -19,8 +19,10 @@ Build status: [![CircleCI](https://circleci.com/gh/halla/golang-docker-circleci-
 ## More Todo
 * ~~Use a goroutine~~
 * ~~Use a channel~~
-* Use an HTML template
+* ~~Use an HTML template~~
 * Serve static files
+* docker-compose.yml
+
 
 
 ## Usage

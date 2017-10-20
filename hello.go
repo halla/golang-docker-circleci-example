@@ -3,11 +3,19 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"os"
 	"time"
 )
+
+// Project type is used to extract fields from Github project json object.
+// Field names have to be uppercase (exported) for json decoder to work.
+type Project struct {
+	Name     string `json:"name"`
+	PushedAt string `json:"pushed_at"`
+}
 
 const githubProjectBaseURL = "https://api.github.com/repos/"
 
@@ -22,44 +30,39 @@ var projectNames = []string{
 // there is no timeout by default!
 var httpClient = &http.Client{Timeout: 10 * time.Second}
 
+// main is the entry point to the application by convention
 func main() {
-
 	fmt.Println("Starting a server listening at port 8080")
 	http.HandleFunc("/", hello)
 	port := os.Getenv("PORT")
 	http.ListenAndServe(":"+port, nil)
 }
 
+// lowercase functions are internal to the package
 func hello(w http.ResponseWriter, r *http.Request) {
-
 	io.WriteString(w, "<h1>golang-docker-circleci-example</h1>")
 
 	// synchronous http request
 	project := new(Project)
 	projectURL := githubProjectBaseURL + projectName
 	fmt.Println("Requesting info for " + projectURL)
+
 	getJSON(projectURL, project)
 	io.WriteString(w, Message(project))
 
 	// async http requests, response through channel
 	ch := make(chan *Project)
-
 	for _, projectName := range projectNames {
 		go getProjectAsync(githubProjectBaseURL+projectName, ch) // start an async go routine
 	}
+	t, _ := template.ParseFiles("project-template.html")
 	for range projectNames {
 		project = <-ch
-		io.WriteString(w, Message(project))
+		t.Execute(w, project)
 		fmt.Println("Received project info for " + project.Name)
 	}
 	fmt.Println(project)
-}
 
-// Project type is used to extract fields from Github project json object.
-// Field names have to be uppercase (exported) for json decoder to work.
-type Project struct {
-	Name     string `json:"name"`
-	PushedAt string `json:"pushed_at"`
 }
 
 // Uppercased functions are exported
