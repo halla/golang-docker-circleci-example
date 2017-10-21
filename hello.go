@@ -17,6 +17,11 @@ type Project struct {
 	PushedAt string `json:"pushed_at"`
 }
 
+type Page struct {
+	Title string
+	Body  string
+}
+
 const githubProjectBaseURL = "https://api.github.com/repos/"
 
 const projectName = "halla/golang-docker-circleci-example"
@@ -38,9 +43,21 @@ func main() {
 	http.ListenAndServe(":"+port, nil)
 }
 
+func FormatDate(rfc3339date string) string {
+	t1, err := time.Parse(time.RFC3339, rfc3339date)
+	if err != nil {
+		return "Error parsing date: " + rfc3339date
+	}
+	return t1.Format(time.RFC1123)
+}
+
 // lowercase functions are internal to the package
 func hello(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "<h1>golang-docker-circleci-example</h1>")
+
+	page := new(Page)
+	page.Title = "golang-docker-circleci-example"
+	page.Body = "Body here"
 
 	// synchronous http request
 	project := new(Project)
@@ -55,7 +72,13 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	for _, projectName := range projectNames {
 		go getProjectAsync(githubProjectBaseURL+projectName, ch) // start an async go routine
 	}
-	t, _ := template.ParseFiles("project-template.html")
+	funcMap := template.FuncMap{
+		"FormatDate": FormatDate,
+	}
+	t, err := template.New("project-template.html").Funcs(funcMap).ParseFiles("project-template.html")
+	if err != nil {
+		fmt.Println("Error parsing project template.")
+	}
 	for range projectNames {
 		project = <-ch
 		t.Execute(w, project)
